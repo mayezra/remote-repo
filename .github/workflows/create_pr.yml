@@ -1,0 +1,29 @@
+# .github/workflows/create-pr.yml
+name: Create Pull Request
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Create a Pull Request
+        run: |
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -X POST \
+            -d '{
+              "title": "Automated PR",
+              "head": "my-test-branch",
+              "base": "main",
+              "body": "This PR was created automatically by GitHub Actions"
+            }' \
+            https://api.github.com/repos/mayezra/remote-repo/pulls
